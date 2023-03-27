@@ -150,3 +150,4 @@ test_logs/
 logs/
 tensorboard/
 src/
+megatron_config.json

@@ -1,4 +1,14 @@
 {
+   "data-path": "/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document",
+   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/tokenizer/gpt2/gpt2-vocab.json",
+   "merge-file": "/home/kit/stud/ukmwn/master_thesis/data/tokenizer/gpt2/gpt2-merges.txt",
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
+
+   # batch / data settings
+   "train_micro_batch_size_per_gpu": 24,
+   "data-impl": "mmap",
+   "split": "949,50,1",
+
    "pipe-parallel-size": 1,
    "model-parallel-size": 1,
    "num-layers": 12,
@@ -60,5 +70,6 @@
    "wall_clock_breakdown": true,
    "launcher": "slurm",
    "deepspeed_slurm": true,
-   "comment": "neox"
+   "no_ssh_check": true,
+   "hostfile": "./hostfile"
 }
