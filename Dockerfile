@@ -35,7 +35,7 @@ ENV PASSWORD=password
 RUN mkdir /var/run/sshd && \
     echo "root:${PASSWORD}" | chpasswd && \
     # Allow root login with password
-    sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && \
     # Prevent user being kicked off after login
     sed -i 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' /etc/pam.d/sshd && \
     echo 'AuthorizedKeysFile     .ssh/authorized_keys' >> /etc/ssh/sshd_config && \
@@ -91,6 +91,7 @@ COPY requirements/requirements.txt .
 COPY requirements/requirements-wandb.txt .
 COPY requirements/requirements-onebitadam.txt .
 COPY requirements/requirements-sparseattention.txt .
+COPY requirements/requirements-flashattention.txt .
 RUN pip install -r requirements.txt && pip install -r requirements-onebitadam.txt && \
     pip install -r requirements-sparseattention.txt && \
     pip install -r requirements-flashattention.txt && \
