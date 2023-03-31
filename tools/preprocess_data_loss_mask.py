@@ -43,6 +43,10 @@ from utils.loss_mask_utils import split_ids_at_endofsentence_token
 
 from utils.loss_mask_utils import  write_tokenized_text_to_file
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class Encoder(object):
     def __init__(self, args):
@@ -61,13 +65,19 @@ class Encoder(object):
             doc_loss_mask = []
 
             # INSERTED CODE
-            # Temporarliy add special token to tokenizer
-            #Encoder.tokenizer.add_special_tokens(["<|endofsentence|>"], special_tokens=True)
-            text = preprocess_loss_mask(text)
+            if self.args.loss_mask:
+                # Temporarliy add special token to tokenizer
+                #Encoder.tokenizer.add_special_tokens(["<|endofsentence|>"], special_tokens=True)
+                text = preprocess_loss_mask(text)
+                
+                text_ids = Encoder.tokenizer.tokenize(text)
+                text_ids = split_ids_at_endofsentence_token(text_ids)
+                text_ids, loss_mask = construct_loss_mask(text_ids, self.args.loss_mask_multiple)
             
-            text_ids = Encoder.tokenizer.tokenize(text)
-            text_ids = split_ids_at_endofsentence_token(text_ids)
-            text_ids, loss_mask = construct_loss_mask(text_ids, self.args.loss_mask_multiple)
+            else:
+                text_ids = Encoder.tokenizer.tokenize(text)
+                # Create the loss mask for the samples not using a loss mask by just creating a list of 1s of length text_ids
+                loss_mask = [1] * len(text_ids)
 
             # END INSERTED CODE
             if len(text_ids) > 0:
@@ -78,13 +88,15 @@ class Encoder(object):
                 doc_ids[-1].append(Encoder.tokenizer.eod)
                 doc_loss_mask[-1].append(1)
             
-            ids["text"] = doc_ids
-            ids["ne_mask"] = doc_loss_mask
+            
+            ids["text"] = np.vstack([doc_ids, doc_loss_mask])
+            #ids["text"] = doc_ids
+            #ids["ne_mask"] = doc_loss_mask
 
         # DEBUGING
         assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
-        print(f"Länge von Doc IDS {len(doc_ids[0])}, Länge von Doc Loss Mask {len(doc_loss_mask[0])}")
-        write_tokenized_text_to_file(ids, "./debug.jsonl")
+        # print(f"Länge von Doc IDS {len(doc_ids[0])}, Länge von Doc Loss Mask {len(doc_loss_mask[0])}")
+        #write_tokenized_text_to_file(ids, "./debug.jsonl")
 
         return ids, len(text)
 
@@ -146,6 +158,12 @@ def get_args():
         default=1.25,
         help="The multiple to use for the loss mask. Default: 1.25"
     )
+    group.add_argument(
+        "--loss-mask",
+        action="store_true",
+        default=False,
+        help="Does the dataset to be tokenized implement the loss mask or not?"
+    )
     group.add_argument("--ftfy", action="store_true", help="Use ftfy to clean text")
     group = parser.add_argument_group(title="output data")
     group.add_argument(
@@ -203,7 +221,17 @@ def yield_from_files(fnames: list, semaphore):
 
 
 def main():
+
+    logging.basicConfig(
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        datefmt="%m/%d/%Y %H:%M:%S",
+        level=logging.INFO,
+    )
+
     args = get_args()
+
+    logger.info(f"=======Running Tokenization with arguments: {args} =========")
+
     encoder = Encoder(args)
     tokenizer = build_tokenizer(args)
     print(f"Vocab size: {tokenizer.vocab_size}")
@@ -277,12 +305,14 @@ def main():
 """
 
 python tools/preprocess_data_loss_mask.py \
-            --input ../data/sample_Wikipedia_20221201.jsonl \
-            --output-prefix ../data/test_loss_mask \
-            --vocab ../data/tokenizer-gpt-ver.json \
+            --input ../data/Wikipedia/Wikipedia_sample_en.jsonl \
+            --output-prefix ../data/verzweifelt \
+            --vocab ../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
-            --loss-mask-multiple 1.25 \
+            --loss-mask-multiple 2 \
+            --loss-mask \
+            --jsonl-keys text \
             --append-eod
 
 """

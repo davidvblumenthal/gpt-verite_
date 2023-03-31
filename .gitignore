@@ -151,3 +151,4 @@ logs/
 tensorboard/
 src/
 megatron_config.json
+tools/debug.jsonl

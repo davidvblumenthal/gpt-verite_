@@ -34,6 +34,10 @@ def _check_data_types(keys, data, target_dtype):
 
 def _build_key_size_numel_dictionaries(keys, data):
     """Build the size on rank 0 and broadcast."""
+    
+    print(f"Debugging data: {data}")
+    print(f"Debugging keys: {keys}")
+    
     max_dim = _MAX_DATA_DIM
     sizes = [0 for _ in range(max_dim) for _ in keys]
 

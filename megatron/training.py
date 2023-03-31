@@ -287,6 +287,11 @@ def _get_batch(neox_args, tokenizer, keys, data, datatype):
         eod_mask_loss=neox_args.eod_mask_loss,
     )
 
+    # ADDED CODE
+    if "ne_mask" in keys:
+        loss_mask_ = data_b["ne_mask"].long()
+        loss_mask = loss_mask_[:, :-1].contiguous()
+
     return tokens, labels, loss_mask, attention_mask, position_ids
 
 
@@ -294,7 +299,8 @@ def get_batch(neox_args, data_iterator):
     """Generate a batch"""
 
     # Items and their type.
-    keys = ["text"]
+    # keys = ["text"] # <- original code
+    keys = ["ne_mask", "text"] # <- adjusted
     datatype = torch.int64
 
     # Broadcast data.
@@ -309,6 +315,7 @@ def get_batch(neox_args, data_iterator):
         data=data,
         datatype=datatype,
     )
+
 
 
 def get_batch_pipe(data, neox_args, curr_scheduler=None):
