@@ -1,8 +1,14 @@
 {
-   "data-path": "/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document",
-   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/tokenizer/gpt2/gpt2-vocab.json",
-   "merge-file": "/home/kit/stud/ukmwn/master_thesis/data/tokenizer/gpt2/gpt2-merges.txt",
+
+   "train_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits"],
+   "valid_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
+   "test_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
+   
    "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
+
+   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
+   "tokenizer_type": "HFTokenizer",
+
 
    # batch / data settings
    "train_micro_batch_size_per_gpu": 24,
@@ -40,7 +46,7 @@
   },
    "train_micro_batch_size_per_gpu": 4,
    "data-impl": "mmap",
-   "split": "949,50,1",
+
    "checkpoint-activations": true,
    "checkpoint-num-layers": 1,
    "partition-activations": true,

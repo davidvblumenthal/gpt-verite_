@@ -39,5 +39,5 @@ export MASTER_ADDR=$(scontrol show hostnames $SLURM_JOB_NODELIST | head -n 1)
 export MASTER_PORT=6000
 
 
-python ./deepy.py ./train.py -d configs slurm_125M.yml
+python ./deepy.py ./train.py -d configs slurm_125M_single.yml
 

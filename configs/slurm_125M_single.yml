@@ -1,8 +1,7 @@
 {
 
-   "train_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/les_faits/sc_loss_text_document", "/home/kit/stud/ukmwn/master_thesis/data/les_faits/no_sc_loss_text_document"],
-   "valid_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
-   "test_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
+   "data_path": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits",
+
    
    
    "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
@@ -14,6 +13,7 @@
    # batch / data settings
    "train_micro_batch_size_per_gpu": 32,
    "data-impl": "mmap",
+   "split": "949,50,1",
 
    "gradient_accumulation_steps": 4,
 
@@ -38,7 +38,7 @@
      }
    },
    "zero_optimization": {
-    "stage": 0,
+    "stage": 1,
     "allgather_partitions": true,
     "allgather_bucket_size": 500000000,
     "overlap_comm": true,
@@ -62,12 +62,12 @@
      "hysteresis": 2,
      "min_loss_scale": 1
    },
-   "train-iters": 67909,
-   "lr-decay-iters": 67909,
+   "train-iters": 10000,
+   "lr-decay-iters": 10000,
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
-   "checkpoint-factor": 10000,
+   "checkpoint-factor": 1000,
    "eval-interval": 1000,
    "eval-iters": 10,
    "log-interval": 100,
