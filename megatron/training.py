@@ -19,6 +19,7 @@
 #
 
 """Pretrain utilities."""
+from time import time
 from datetime import datetime
 from functools import partial
 
@@ -56,6 +57,8 @@ from megatron.utils import (
 )
 from megatron.model.gpt2_model import cross_entropy
 from eval_tasks import run_eval_harness
+
+START_TIME = int(time())
 
 
 def mup_weights_reinit(neox_args, model):
@@ -830,6 +833,20 @@ def train(
                 lr_scheduler=lr_scheduler,
             )
 
+
+        if (int(time()) - START_TIME) / 60 >= neox_args.exit_interval:
+            print_rank_0("Exiting and saving checkpoint due to exit_duration")
+            
+            save_checkpoint(
+                neox_args=neox_args,
+                iteration=iteration,
+                model=model,
+                optimizer=optimizer,
+                lr_scheduler=lr_scheduler,
+            )
+            sys.exit()
+
+
         # Evaluation
         if (
             neox_args.eval_interval
@@ -847,7 +864,7 @@ def train(
                 verbose=False,
                 timers=timers,
             )
-
+        """
         if neox_args.exit_interval and iteration % neox_args.exit_interval == 0:
             torch.distributed.barrier()
             time_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -858,7 +875,7 @@ def train(
                 )
             )
             sys.exit()
-
+        """
     return iteration
 
 

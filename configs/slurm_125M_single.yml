@@ -1,19 +1,22 @@
 {
 
-   "train_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits"],
-   "valid_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
-   "test_data_paths": ["/home/kit/stud/ukmwn/master_thesis/data/training_ready/trial_run/trial_data_text_document"],
+   "data_path": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits",
+
+   
    
    "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
+   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
 
    "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
 
    # batch / data settings
-   "train_micro_batch_size_per_gpu": 24,
+   "train_micro_batch_size_per_gpu": 32,
    "data-impl": "mmap",
    "split": "949,50,1",
+
+   "gradient_accumulation_steps": 4,
 
    "pipe-parallel-size": 1,
    "model-parallel-size": 1,
@@ -36,7 +39,7 @@
      }
    },
    "zero_optimization": {
-    "stage": 0,
+    "stage": 1,
     "allgather_partitions": true,
     "allgather_bucket_size": 500000000,
     "overlap_comm": true,
@@ -44,8 +47,6 @@
     "reduce_bucket_size": 500000000,
     "contiguous_gradients": true
   },
-   "train_micro_batch_size_per_gpu": 4,
-   "data-impl": "mmap",
 
    "checkpoint-activations": true,
    "checkpoint-num-layers": 1,
@@ -62,20 +63,18 @@
      "hysteresis": 2,
      "min_loss_scale": 1
    },
-   "train-iters": 320000,
-   "lr-decay-iters": 320000,
+   "train-iters": 25000,
+   "lr-decay-iters": 25000,
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
-   "checkpoint-factor": 10000,
+   "checkpoint-factor": 2000,
    "eval-interval": 1000,
    "eval-iters": 10,
    "log-interval": 100,
    "steps_per_print": 10,
    "keep-last-n-checkpoints": 4,
    "wall_clock_breakdown": true,
-   "launcher": "slurm",
-   "deepspeed_slurm": true,
-   "no_ssh_check": true,
-   "hostfile": "./hostfile"
+
+   "exit_interval": 894
 }
