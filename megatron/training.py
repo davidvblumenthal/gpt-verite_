@@ -288,8 +288,8 @@ def _get_batch(neox_args, tokenizer, keys, data, datatype):
     )
 
     # ADDED CODE
-    if "ne_mask" in keys:
-        loss_mask_ = data_b["ne_mask"].long()
+    if "sc_mask" in keys:
+        loss_mask_ = data_b["sc_mask"].long()
         loss_mask = loss_mask_[:, :-1].contiguous()
 
     return tokens, labels, loss_mask, attention_mask, position_ids
@@ -300,7 +300,7 @@ def get_batch(neox_args, data_iterator):
 
     # Items and their type.
     # keys = ["text"] # <- original code
-    keys = ["ne_mask", "text"] # <- adjusted
+    keys = ["sc_mask", "text"] # <- adjusted
     datatype = torch.int64
 
     # Broadcast data.
