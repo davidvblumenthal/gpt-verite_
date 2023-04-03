@@ -89,9 +89,9 @@ class Encoder(object):
                 doc_loss_mask[-1].append(1)
             
             
-            ids["text"] = np.vstack([doc_ids, doc_loss_mask])
-            #ids["text"] = doc_ids
-            #ids["ne_mask"] = doc_loss_mask
+            #ids["text"] = np.vstack([doc_ids, doc_loss_mask])
+            ids["text"] = doc_ids
+            ids["sc_mask"] = doc_loss_mask
 
         # DEBUGING
         assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
@@ -114,7 +114,7 @@ def get_args():
     group.add_argument(
         "--jsonl-keys",
         nargs="+",
-        default=["text", "ne_mask"],
+        default=["text", "sc_mask"],
         help="space separate listed of keys to extract from jsonl. Defa",
     )
     group.add_argument(
@@ -155,7 +155,7 @@ def get_args():
     group.add_argument(
         "--loss-mask-multiple",
         type=float,
-        default=1.25,
+        default=2,
         help="The multiple to use for the loss mask. Default: 1.25"
     )
     group.add_argument(
@@ -257,11 +257,11 @@ def main():
     output_idx_files = {}
     builders = {}
     for key in args.jsonl_keys:
-        output_bin_files[key] = "{}_{}_{}.bin".format(
-            args.output_prefix, key, "document"
+        output_bin_files[key] = "{}_{}.bin".format(
+            args.output_prefix, key
         )
-        output_idx_files[key] = "{}_{}_{}.idx".format(
-            args.output_prefix, key, "document"
+        output_idx_files[key] = "{}_{}.idx".format(
+            args.output_prefix, key
         )
         builders[key] = indexed_dataset.make_builder(
             output_bin_files[key],
@@ -312,7 +312,6 @@ python tools/preprocess_data_loss_mask.py \
             --tokenizer-type HFGPTVerTokenizer \
             --loss-mask-multiple 2 \
             --loss-mask \
-            --jsonl-keys text \
             --append-eod
 
 """

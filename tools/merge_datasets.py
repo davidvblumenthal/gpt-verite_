@@ -44,8 +44,8 @@ def main(args):
 
 """
 
-python merge_datasets.py --input /home/kit/stud/ukmwn/master_thesis/data/les_faits/temp \
-                         --output-prefix /home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits
+python merge_datasets.py --input /home/kit/stud/ukmwn/master_thesis/data/les_faits/sc_mask_2/text \
+                         --output-prefix /home/kit/stud/ukmwn/master_thesis/data/les_faits/sc_mask_merged/les_faits_text
 
 """
 

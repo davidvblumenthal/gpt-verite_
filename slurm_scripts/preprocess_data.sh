@@ -2,9 +2,9 @@
 #SBATCH --job-name testing_multi_node_training # Name for your job
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
-#SBATCH --cpus-per-task=15
+#SBATCH --cpus-per-task=30
 #SBATCH --time=05:30:00
-#SBATCH --mem=65gb
+#SBATCH --mem=100gb
 #SBATCH --array=0-1
 
 
@@ -39,11 +39,11 @@ echo "USE LOSS MASK: "$USE_LMASK
 
 python preprocess_data_loss_mask.py \
             --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/${DATASET}.jsonl \
-            --output-prefix ../../data/les_faits/${DATASET} \
+            --output-prefix ../../data/les_faits/sc_mask_2/${DATASET} \
             --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
-            --loss-mask-multiple 1.25 \
+            --loss-mask-multiple 2 \
             --append-eod \
-            --workers 15 \
+            --workers 30 \
             $USE_LMASK

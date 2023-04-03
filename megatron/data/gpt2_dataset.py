@@ -121,7 +121,7 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
                 
                 # And finally add the relevant portion of last document.
                 sample_list_text.append(
-                    self.indexed_dataset.get(
+                    self.indexed_dataset_text.get(
                         self.doc_idx[doc_index_l], length=offset_l + 1
                     )
                 )

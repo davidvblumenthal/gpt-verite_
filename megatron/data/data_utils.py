@@ -102,13 +102,13 @@ def build_train_valid_test_datasets(
 
     # Construct the paths if sc_mask is used
     """
-    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_sc_mask_document
-    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_text_document
+    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_sc_mask
+    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_text
 
     /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits
     """
-    data_prefix_text = f"{data_prefix}_text_document"
-    data_prefix_sc_mask = f"{data_prefix}_sc_mask_document"
+    data_prefix_text = f"{data_prefix}_text"
+    data_prefix_sc_mask = f"{data_prefix}_sc_mask"
 
     # Indexed dataset.
     indexed_dataset_text = make_indexed_dataset(data_prefix_text, data_impl, skip_warmup)
