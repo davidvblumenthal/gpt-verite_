@@ -23,6 +23,7 @@ from megatron import mpu, print_rank_0
 from megatron.data.indexed_dataset import make_dataset as make_indexed_dataset
 from megatron.data.blendable_dataset import BlendableDataset
 from megatron.data.gpt2_dataset import GPT2Dataset
+from megatron.data.gpt2_dataset import GPTVeriteDataset
 from megatron.data.samplers import DistributedBatchSampler
 
 
@@ -93,12 +94,30 @@ def build_train_valid_test_datasets(
     seed,
     skip_warmup,
 ):
-    """Build train, valid, and test datasets."""
+    """
+        Build train, valid, and test datasets.
+        data_prefix: data_path provided in config file
+        If use sc_mask need to construct the paths by adding text or sc_mask
+    """
+
+    # Construct the paths if sc_mask is used
+    """
+    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_sc_mask_document
+    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits_text_document
+
+    /home/kit/stud/ukmwn/master_thesis/data/les_faits/les_faits
+    """
+    data_prefix_text = f"{data_prefix}_text_document"
+    data_prefix_sc_mask = f"{data_prefix}_sc_mask_document"
 
     # Indexed dataset.
-    indexed_dataset = make_indexed_dataset(data_prefix, data_impl, skip_warmup)
+    indexed_dataset_text = make_indexed_dataset(data_prefix_text, data_impl, skip_warmup)
+    indexed_dataset_sc_mask = make_indexed_dataset(data_prefix_sc_mask, data_impl, skip_warmup)
 
-    total_num_of_documents = indexed_dataset.sizes.shape[0]
+    total_num_of_documents = indexed_dataset_text.sizes.shape[0]
+    assert total_num_of_documents == indexed_dataset_sc_mask.sizes.shape[0]
+    
+    
     splits = get_train_valid_test_split_(splits_string, total_num_of_documents)
 
     # Print stats about the splits.
@@ -124,11 +143,12 @@ def build_train_valid_test_datasets(
                 start=splits[index], stop=splits[index + 1], step=1, dtype=np.int32
             )
 
-            dataset = GPT2Dataset(
+            dataset = GPTVeriteDataset(
                 name,
                 data_prefix,
                 documents,
-                indexed_dataset,
+                indexed_dataset_text,
+                indexed_dataset_sc_mask,
                 train_valid_test_num_samples[index],
                 seq_length,
                 seed,

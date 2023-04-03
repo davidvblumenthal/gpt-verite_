@@ -32,7 +32,8 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
         name,
         data_prefix,
         documents,
-        indexed_dataset,
+        indexed_dataset_text,
+        indexed_dataset_sc_mask,
         num_samples,
         seq_length,
         seed,
@@ -41,11 +42,15 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
     ):
 
         self.name = name
-        self.indexed_dataset = indexed_dataset
+        self.indexed_dataset_text = indexed_dataset_text
+        self.indexed_dataset_sc_mask = indexed_dataset_sc_mask
 
         # Checks
         assert np.min(documents) >= 0
-        assert np.max(documents) < indexed_dataset.sizes.shape[0]
+        assert np.max(documents) < indexed_dataset_text.sizes.shape[0]
+        assert np.max(documents) < indexed_dataset_sc_mask.sizes.shape[0]
+        # Check if sc_mask matches text
+        assert indexed_dataset_text.sizes.shape[0] == indexed_dataset_sc_mask.sizes.shape[0]
 
         if build_index_mappings:
             # Build index mappings.
@@ -53,7 +58,7 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
                 self.name,
                 data_prefix,
                 documents,
-                self.indexed_dataset.sizes,
+                self.indexed_dataset_text.sizes,
                 num_samples,
                 seq_length,
                 seed,
@@ -81,28 +86,59 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
             offset_l = self.sample_idx[idx + 1][1]
             # If we are within the same document, just extract the chunk.
             if doc_index_f == doc_index_l:
-                sample = self.indexed_dataset.get(
+                sample_text = self.indexed_dataset_text.get(
                     self.doc_idx[doc_index_f],
                     offset=offset_f,
                     length=offset_l - offset_f + 1,
                 )
+
+                # Add same for sc_mask
+                sample_sc_mask = self.indexed_dataset_sc_mask.get(
+                    self.doc_idx[doc_index_f],
+                    offset=offset_f,
+                    length=offset_l - offset_f + 1,
+                )
+
             else:
                 # Otherwise, get the rest of the initial document.
-                sample_list = [
-                    self.indexed_dataset.get(self.doc_idx[doc_index_f], offset=offset_f)
+                sample_list_text = [
+                    self.indexed_dataset_text.get(self.doc_idx[doc_index_f], offset=offset_f)
                 ]
+
+                # Add same for sc_mask
+                sample_list_sc_mask = [
+                    self.indexed_dataset_sc_mask.get(self.doc_idx[doc_index_f], offset=offset_f)
+                ]
+
                 # Loop over all in between documents and add the entire document.
                 for i in range(doc_index_f + 1, doc_index_l):
-                    sample_list.append(self.indexed_dataset.get(self.doc_idx[i]))
+                    sample_list_text.append(self.indexed_dataset_text.get(self.doc_idx[i]))
+                
+                # Add same for sc_mask
+                for i in range(doc_index_f + 1, doc_index_l):
+                    sample_list_sc_mask.append(self.indexed_dataset_sc_mask.get(self.doc_idx[i]))
+                
+                
                 # And finally add the relevant portion of last document.
-                sample_list.append(
+                sample_list_text.append(
                     self.indexed_dataset.get(
                         self.doc_idx[doc_index_l], length=offset_l + 1
                     )
                 )
-                sample = np.concatenate(sample_list)
 
-            return {"text": np.array(sample, dtype=np.int64)}
+                # Add same for sc_mask
+                sample_list_sc_mask.append(
+                    self.indexed_dataset_sc_mask.get(
+                        self.doc_idx[doc_index_l], length=offset_l + 1
+                    )
+                )
+
+                sample_text = np.concatenate(sample_list_text)
+                # Add same for sc_mask
+                sample_sc_mask = np.concatenate(sample_list_sc_mask)
+
+            return {"text": np.array(sample_text, dtype=np.int64), "sc_mask": np.array(sample_sc_mask, dtype=np.int64)}
+        
         except IndexError:
             new_idx = idx % len(self)
             print(
