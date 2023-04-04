@@ -29,6 +29,7 @@ sys.path.append(
 )
 from megatron.tokenizer import build_tokenizer
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 """
 A script for converting saved NeoX Checkpoints to Huggingface (HF) compatible GPT-NeoX type models.
@@ -58,7 +59,7 @@ def load_partitions(input_checkpoint_path, mp_partitions) -> List[torch.Tensor]:
 
 
 def get_state(
-    state_dicts: list[torch.Tensor],
+    state_dicts: List[torch.Tensor],
     key: str,
     layer_idx: int,
 ) -> torch.Tensor:
@@ -278,6 +279,13 @@ def convert(input_checkpoint_path, loaded_config, output_checkpoint_path):
 
     return hf_model
 
+"""
+python convert_sequential_to_hf.py \
+             --input_dir /home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune/global_step25000 \
+             --config_file /home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune/global_step25000/configs/slurm_125M_single.yml \
+             --output_dir /home/kit/stud/ukmwn/master_thesis/trained_models/125M_LesFaits \
+             --upload
+"""
 
 if __name__ == "__main__":
 
@@ -333,21 +341,25 @@ if __name__ == "__main__":
         tokenizer.save_pretrained(args.output_dir)
         print("tokenizer saved!")
 
+        hf_model.to(device)
+        input_ids = tokenizer.encode("Hello, I am testing ", return_tensors="pt")
+        input_ids.to(device)
+
         print(
             tokenizer.decode(
-                hf_model.generate(
-                    tokenizer.encode("Hello, I am testing ", return_tensors="pt")
+                hf_model.generate(                   
                 )[0]
             )
         )
 
     if args.upload:
         repo_name = input("Provide a repository name for the HF Hub: ")
-        create_repo(repo_name, repo_type="model", private=False, use_auth_token=True)
+        create_repo(repo_name, repo_type="model", private=True, use_auth_token=True)
 
         api = HfApi()
         api.upload_folder(
             folder_path=args.output_dir,
             repo_id=repo_name,
             repo_type="model",
+            token="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"
         )
