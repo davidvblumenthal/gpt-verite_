@@ -11,12 +11,21 @@
 #SBATCH --mail-type ALL         # ALL will alert you of job beginning, completion, failure etc
 
 
+
+# check if this is the first or second submission
+if [ -z "$SLURM_JOB_RESTART_COUNT"]; then
+    count=1
+else
+    counts=$SLURM_JOB_RESTART_COUNT
+fi
+
+# job logic below
+
 module purge
 
 module load compiler/gnu/11.2
 module load mpi/openmpi/4.1
 module load devel/cuda/11.7
-
 
 # ACTIVATE ANACONDA
 eval "$(conda shell.bash hook)"
@@ -25,6 +34,10 @@ conda activate training_main
 WORKING_DIR="/home/kit/stud/ukmwn/master_thesis/gpt-verite_"
 pushd $WORKING_DIR
 
-
 python ./deepy.py ./train.py -d configs slurm_125M_single_sc_mask.yml
 
+
+# Submission logic for resubmit
+if [ "$count" -lt 2 ]; then      # 2 submits the job 2 times - can be adjusted
+    sbatch $0
+fi
