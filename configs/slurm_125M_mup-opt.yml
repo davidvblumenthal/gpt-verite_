@@ -1,0 +1,95 @@
+{
+
+   "data_path": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits",
+
+   
+   
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125M-mup-opt ",
+
+   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
+   "tokenizer_type": "HFTokenizer",
+
+
+   # batch / data settings
+   "train_micro_batch_size_per_gpu": 32,
+   "data-impl": "mmap",
+   "split": "949,50,1",
+
+   "gradient_accumulation_steps": 4,
+
+   "pipe-parallel-size": 1,
+   "model-parallel-size": 1,
+   "num-layers": 23,
+   "hidden-size": 552,
+   "num-attention-heads": 12,
+   "seq-length": 2048,
+   "max-position-embeddings": 2048,
+   "norm": "layernorm",
+   "pos-emb": "rotary",
+   "no-weight-tying": true,
+   "scaled-upper-triang-masked-softmax-fusion": true,
+   "bias-gelu-fusion": true,
+   "optimizer": {
+     "type": "Adam",
+     "params": {
+       "lr": 0.006,
+       "betas": [0.9, 0.999],
+       "eps": 1.0e-8
+     }
+   },
+
+   
+   "use-mup": true,
+   "save-base-shapes": false,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
+   "base-shapes-file": "./base_shapes/base-shapes", # # load base shapes from this file
+   "coord-check": false, # generate coord check plots to verify mup's implementation in neox
+
+   "mup-init-scale": 1.0,
+   "mup-attn-temp": 1.0,
+   "mup-output-temp": 1.0,
+   "mup-embedding-mult": 1.0,
+   "mup-rp-embedding-mult": 1.0,
+
+
+   "zero_optimization": {
+    "stage": 1,
+    "allgather_partitions": true,
+    "allgather_bucket_size": 500000000,
+    "overlap_comm": true,
+    "reduce_scatter": true,
+    "reduce_bucket_size": 500000000,
+    "contiguous_gradients": true
+  },
+
+   "checkpoint-activations": true,
+   "checkpoint-num-layers": 1,
+   "partition-activations": true,
+   "synchronize-each-layer": true,
+   "gradient_clipping": 1.0,
+   "weight-decay": 0.0,
+   "hidden-dropout": 0.0,
+   "attention-dropout": 0.0,
+   "fp16": {
+     "enabled": true,
+     "loss_scale": 0,
+     "loss_scale_window": 1000,
+     "hysteresis": 2,
+     "min_loss_scale": 1
+   },
+   "train-iters": 25000,
+   "lr-decay-iters": 25000,
+   "distributed-backend": "nccl",
+   "lr-decay-style": "linear",
+   "warmup": 0.01,
+   "checkpoint-factor": 2000,
+   "eval-interval": 1000,
+   "eval-iters": 10,
+   "log-interval": 100,
+   "steps_per_print": 10,
+   "keep-last-n-checkpoints": 4,
+   "wall_clock_breakdown": true,
+
+   "wandb_group": "125M-mup-opt",
+
+   "exit_interval": 894
+}

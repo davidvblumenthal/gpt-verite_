@@ -26,5 +26,5 @@ WORKING_DIR="/home/kit/stud/ukmwn/master_thesis/gpt-verite_"
 pushd $WORKING_DIR
 
 
-python ./deepy.py ./train.py -d configs slurm_125M_single.yml
+python ./deepy.py ./train.py -d configs slurm_125M_mup-opt.yml
 
