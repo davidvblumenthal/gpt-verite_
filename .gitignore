@@ -2,7 +2,6 @@
 *.out
 
 # mup base shapes
-base_shapes/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
