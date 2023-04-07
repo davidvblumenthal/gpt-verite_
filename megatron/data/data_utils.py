@@ -23,7 +23,7 @@ from megatron import mpu, print_rank_0
 from megatron.data.indexed_dataset import make_dataset as make_indexed_dataset
 from megatron.data.blendable_dataset import BlendableDataset
 from megatron.data.gpt2_dataset import GPT2Dataset
-from megatron.data.gpt2_dataset import GPTVeriteDataset
+from megatron.data.gptver_dataset import GPTVeriteDataset
 from megatron.data.samplers import DistributedBatchSampler
 
 
