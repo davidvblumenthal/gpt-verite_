@@ -87,7 +87,31 @@ class Encoder(object):
             if self.args.append_eod:
                 doc_ids[-1].append(Encoder.tokenizer.eod)
                 doc_loss_mask[-1].append(1)
-            
+
+            # Add padding token to the end of the document if necessary
+            if self.args.pad_to_max_length:
+                max_length = 2048
+
+                # Check if document is longer than max length
+                if len(doc_ids[-1]) > max_length:
+                    left_over = len(doc_ids[-1]) % max_length
+                    num_pad_tokens = max_length - left_over
+                    
+                    doc_ids[-1].extend([Encoder.tokenizer.pad] * num_pad_tokens)
+                    doc_loss_mask[-1].extend([0] * num_pad_tokens)
+                
+                # Check if document is shorter than max length
+                elif len(doc_ids[-1]) < max_length:
+                    num_pad_tokens = max_length - len(doc_ids[-1])
+                    
+                    doc_ids[-1].extend([Encoder.tokenizer.pad] * num_pad_tokens)
+                    doc_loss_mask[-1].extend([0] * num_pad_tokens)
+
+                # Sanity check if document is exactly max length or divisible by max length
+                assert len(doc_ids[-1]) % max_length == 0, f"Document length {len(doc_ids[-1])} is not equal to or divisible by max length"
+
+                
+                    
             
             #ids["text"] = np.vstack([doc_ids, doc_loss_mask])
             ids["text"] = doc_ids
@@ -95,8 +119,8 @@ class Encoder(object):
 
         # DEBUGING
         assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
-        # print(f"Länge von Doc IDS {len(doc_ids[0])}, Länge von Doc Loss Mask {len(doc_loss_mask[0])}")
-        #write_tokenized_text_to_file(ids, "./debug.jsonl")
+        print(f"Länge von Doc IDS {len(doc_ids[0])}, Länge von Doc Loss Mask {len(doc_loss_mask[0])}")
+        write_tokenized_text_to_file(ids, "./debug.jsonl")
 
         return ids, len(text)
 
@@ -151,6 +175,12 @@ def get_args():
         "--append-eod",
         action="store_true",
         help="Append an <eod> token to the end of a document.",
+    )
+    group.add_argument(
+        "--pad-to-max-length",
+        action="store_true",
+        default=False,
+        help="Pad documents to the maximum length of the model.",
     )
     group.add_argument(
         "--loss-mask-multiple",
@@ -305,13 +335,14 @@ def main():
 """
 
 python tools/preprocess_data_loss_mask.py \
-            --input ../data/Wikipedia/Wikipedia_sample_en.jsonl \
-            --output-prefix ../data/verzweifelt \
-            --vocab ../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
+            --input /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/sample_Wikipedia_20221201.jsonl \
+            --output-prefix ../data/padding/verzweifelt \
+            --vocab /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/tokenizer-gpt-ver.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
             --loss-mask-multiple 2 \
             --loss-mask \
+            --pad-to-max-length \
             --append-eod
 
 """
