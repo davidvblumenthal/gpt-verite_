@@ -39,5 +39,5 @@ python ./deepy.py ./train.py -d configs slurm_125M_single_sc_mask.yml
 
 # Submission logic for resubmit
 if [ "$count" -lt 2 ]; then      # 2 submits the job 2 times - can be adjusted
-    sbatch $0
+    sbatch -p gpu_8 $0
 fi
