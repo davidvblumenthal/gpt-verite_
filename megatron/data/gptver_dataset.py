@@ -137,6 +137,9 @@ class GPTVeriteDataset(torch.utils.data.Dataset):
                 # Add same for sc_mask
                 sample_sc_mask = np.concatenate(sample_list_sc_mask)
 
+            
+            #print(f"Debugging: GPT-Ver Dataset: {len(sample_text)}")
+            
             return {"text": np.array(sample_text, dtype=np.int64), "sc_mask": np.array(sample_sc_mask, dtype=np.int64)}
         
         except IndexError:
@@ -167,7 +170,6 @@ def _build_index_mappings(
     """
     # Number of tokens in each epoch and number of required epochs.
     tokens_per_epoch = _num_tokens(documents, sizes)
-    
     num_epochs = _num_epochs(tokens_per_epoch, seq_length, num_samples)
     # rng state
     np_rng = np.random.RandomState(seed=seed)
@@ -214,7 +216,6 @@ def _build_index_mappings(
             assert doc_idx.dtype == np.int32
             assert sizes.dtype == np.int32
 
-            """
             num_samples = (num_epochs * tokens_per_epoch - 1) / seq_length
             if 2 * (num_samples + 1) < np.iinfo(np.int32).max:
                 sample_idx = helpers.build_sample_idx_int32(
@@ -224,11 +225,6 @@ def _build_index_mappings(
                 sample_idx = helpers.build_sample_idx_int64(
                     sizes, doc_idx, seq_length, num_epochs, tokens_per_epoch
                 )
-            """
-
-            num_samples = (num_epochs * tokens_per_epoch) / seq_length
-            sample_idx = _build_sample_idx(sizes, doc_idx, seq_length, num_epochs, tokens_per_epoch)
-
             np.save(sample_idx_filename, sample_idx, allow_pickle=True)
             print_rank_0(
                 " > elapsed time to build and save sample-idx mapping "
@@ -238,8 +234,8 @@ def _build_index_mappings(
             start_time = time.time()
             # -1 is due to data structure used to retrieve the index:
             #    sample i --> [sample_idx[i], sample_idx[i+1])
-            #shuffle_idx = _build_shuffle_idx(sample_idx.shape[0] - 1, np_rng)
-            np.save(shuffle_idx_filename, sample_idx, allow_pickle=True)
+            shuffle_idx = _build_shuffle_idx(sample_idx.shape[0] - 1, np_rng)
+            np.save(shuffle_idx_filename, shuffle_idx, allow_pickle=True)
             print_rank_0(
                 " > elapsed time to build and save shuffle-idx mapping"
                 " (seconds): {:4f}".format(time.time() - start_time)
@@ -324,36 +320,28 @@ def _build_sample_idx(sizes, doc_idx, seq_length, num_epochs, tokens_per_epoch):
     sample_index += 1
     while sample_index <= num_samples:
         # Start with a fresh sequence.
-        #remaining_seq_length = seq_length + 1
-        #while remaining_seq_length != 0:
-        # Get the document length.
-        doc_id = doc_idx[doc_idx_index]
-        doc_length = sizes[doc_id]
-        # And add it to the current sequence.
-        #remaining_seq_length -= doc_length
-        if doc_length == seq_length:
-            # Record the sequence.
-            sample_idx[sample_index][0] = doc_idx_index
-            sample_idx[sample_index][1] = 0
-            sample_index += 1
-            # If we have reached the desired number of samples, return.
-            if sample_idx > num_samples:
-                break
-            
-            # Move to the next doc
-            doc_idx_index += 1
-
-        else:
-            # Record the sequence.
-            num_sequences = doc_length // seq_length
-
-            for i in range(num_sequences):
-                sample_idx[sample_index][0] = doc_idx_index
-                sample_idx[sample_index][1] = i * seq_length
-                sample_index += 1
-                # if we have reached the desired number of samples, return.
-                break
-
+        remaining_seq_length = seq_length + 1
+        while remaining_seq_length != 0:
+            # Get the document length.
+            doc_id = doc_idx[doc_idx_index]
+            doc_length = sizes[doc_id] - doc_offset
+            # And add it to the current sequence.
+            remaining_seq_length -= doc_length
+            # If we have more than a full sequence, adjust offset and set
+            # remaining length to zero so we return from the while loop.
+            # Note that -1 here is for the same reason we have -1 in
+            # `_num_epochs` calculations.
+            if remaining_seq_length <= 0:
+                doc_offset += remaining_seq_length + doc_length - 1
+                remaining_seq_length = 0
+            else:
+                # Otherwise, start from the beginning of the next document.
+                doc_idx_index += 1
+                doc_offset = 0
+        # Record the sequence.
+        sample_idx[sample_index][0] = doc_idx_index
+        sample_idx[sample_index][1] = doc_offset
+        sample_index += 1
 
     return sample_idx
 
@@ -364,5 +352,5 @@ def _build_shuffle_idx(size, np_rng):
     if size >= (np.iinfo(np.uint32).max - 1):
         dtype_ = np.int64
     shuffle_idx = np.arange(start=0, stop=size, step=1, dtype=dtype_)
-    np_rng.shuffle(shuffle_idx)
+    #np_rng.shuffle(shuffle_idx)
     return shuffle_idx

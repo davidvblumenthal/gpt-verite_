@@ -29,7 +29,7 @@ sys.path.append(
 )
 from megatron.tokenizer import build_tokenizer
 
-
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 """
 A script for converting saved NeoX Checkpoints to Huggingface (HF) compatible GPT-NeoX type models.
 
@@ -58,7 +58,7 @@ def load_partitions(input_checkpoint_path, mp_partitions) -> List[torch.Tensor]:
 
 
 def get_state(
-    state_dicts: list[torch.Tensor],
+    state_dicts: List[torch.Tensor],
     key: str,
     layer_idx: int,
 ) -> torch.Tensor:
@@ -333,10 +333,13 @@ if __name__ == "__main__":
         tokenizer.save_pretrained(args.output_dir)
         print("tokenizer saved!")
 
+        hf_model.to(device)
+        input_ids = tokenizer.encode("Hello, I am testing ", return_tensors="pt")
+        input_ids.to(device)
+
         print(
             tokenizer.decode(
-                hf_model.generate(
-                    tokenizer.encode("Hello, I am testing ", return_tensors="pt")
+                hf_model.generate(                   
                 )[0]
             )
         )
