@@ -44,8 +44,8 @@ def main(args):
 
 """
 
-python merge_datasets.py --input /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/padding/sc_mask \
-                         --output-prefix /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/padding_merged/test_sc_mask
+python merge_datasets.py --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/text \
+                         --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/merged/les_faits_v2_text
 
 """
 

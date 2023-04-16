@@ -119,8 +119,6 @@ class Encoder(object):
 
         # DEBUGING
         assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
-        print(f"Länge von Doc IDS {len(doc_ids[0])}, Länge von Doc Loss Mask {len(doc_loss_mask[0])}")
-        write_tokenized_text_to_file(ids, "./debug.jsonl")
 
         return ids, len(text)
 

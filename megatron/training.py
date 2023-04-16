@@ -273,20 +273,12 @@ def pretrain(neox_args):
             chart_name="test",
         )
 
-import jsonlines
-def write_tokenized_text_to_file(tokenized_text: dict, file_path: str):
-   with jsonlines.open(file_path, mode='a') as writer:
-        writer.write(tokenized_text)
-
 
 def _get_batch(neox_args, tokenizer, keys, data, datatype):
     """Support function for get_batch / get_batch pipe (to avoid code repetition)"""
     data_b = mpu.broadcast_data(keys, data, datatype)
     text = data_b["text"]
     sc_mask = data_b["sc_mask"]
-    #print(f"Debugging Text Size: {text.size()}")
-    #print(f"Text: {text}")
-    #print(f"SC-Mask: {sc_mask}")
 
     # Unpack.
     tokens_ = data_b["text"].long()
@@ -304,12 +296,6 @@ def _get_batch(neox_args, tokenizer, keys, data, datatype):
     if "sc_mask" in keys:
         loss_mask_ = data_b["sc_mask"].long()
         loss_mask = loss_mask_[:, :-1].contiguous()
-
-    #print("------------After Cutting------------")
-    #print(f"Text: {tokens}")
-    #print(f"SC-Mask {loss_mask}")
-
-    write_tokenized_text_to_file({"text": tokens.detach().cpu().numpy().tolist(), "loss_mask": loss_mask.detach().cpu().numpy().tolist()}, "/home/kit/stud/ukmwn/master_thesis/a_debugging_artefacts/debug.jsonl")
 
     return tokens, labels, loss_mask, attention_mask, position_ids
 

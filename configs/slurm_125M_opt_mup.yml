@@ -1,11 +1,9 @@
 {
 
-   "data_path": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits",
-
-   
-   
-   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
-   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small/checkpoints_finetune",
+   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/training_data/les_faits_v2",
+  
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125M-GPT-Verite",
+   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125M-GPT-Verite",
 
    "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
    "tokenizer_type": "HFTokenizer",
@@ -16,7 +14,7 @@
    "data-impl": "mmap",
    "split": "949,50,1",
 
-   "gradient_accumulation_steps": 4,
+   "gradient_accumulation_steps": 8,
 
    "pipe-parallel-size": 1,
    "model-parallel-size": 1,
@@ -42,8 +40,8 @@
    
    "use-mup": true,
    "save-base-shapes": true,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
-   "base-shapes-file": "base-shapes", # # load base shapes from this file
-   "coord-check": true, # generate coord check plots to verify mup's implementation in neox
+   "base-shapes-file": "/home/kit/stud/ukmwn/master_thesis/mup-base-shapes/125M-GPT-Verite", # # load base shapes from this file
+   "coord-check": false, # generate coord check plots to verify mup's implementation in neox
 
    "mup-init-scale": 1.0,
    "mup-attn-temp": 1.0,
@@ -87,8 +85,12 @@
    "eval-iters": 10,
    "log-interval": 100,
    "steps_per_print": 10,
-   "keep-last-n-checkpoints": 4,
+   
+   "keep-last-n-checkpoints": 2,
    "wall_clock_breakdown": true,
+
+   "wandb_project": "GPT-Verite",
+   "wandb_group": "125M-GPT-Verite",
 
    "exit_interval": 894
 }

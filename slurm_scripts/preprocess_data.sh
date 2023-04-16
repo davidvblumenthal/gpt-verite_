@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --job-name testing_multi_node_training # Name for your job
+#SBATCH --job-name tokenize-les_faits-v2 # Name for your job
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=30
-#SBATCH --time=05:30:00
+#SBATCH --time=07:30:00
 #SBATCH --mem=100gb
 #SBATCH --array=0-1
 
@@ -38,8 +38,8 @@ echo "USE LOSS MASK: "$USE_LMASK
 
 
 python preprocess_data_loss_mask.py \
-            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/${DATASET}.jsonl \
-            --output-prefix ../../data/les_faits/sc_mask_2/${DATASET} \
+            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/${DATASET}.jsonl \
+            --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/${DATASET} \
             --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
@@ -47,3 +47,8 @@ python preprocess_data_loss_mask.py \
             --append-eod \
             --workers 30 \
             $USE_LMASK
+
+
+
+
+#             --pad-to-max-length \

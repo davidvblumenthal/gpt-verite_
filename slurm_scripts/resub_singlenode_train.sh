@@ -34,7 +34,7 @@ conda activate training_main
 WORKING_DIR="/home/kit/stud/ukmwn/master_thesis/gpt-verite_"
 pushd $WORKING_DIR
 
-python ./deepy.py ./train.py -d configs slurm_125M_single_sc_mask.yml
+python ./deepy.py ./train.py -d configs slurm_125M_opt_mup.yml
 
 
 # Submission logic for resubmit
