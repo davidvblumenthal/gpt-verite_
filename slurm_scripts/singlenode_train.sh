@@ -3,8 +3,8 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
-#SBATCH --time=15:00:00
-#SBATCH --mem=80gb
+#SBATCH --time=8:00:00
+#SBATCH --mem=200gb
 #SBATCH --gpus-per-node=4              # --gres=gpu:4
 
 #SBATCH --mail-user ukmwn@student.kit.edu     # this is the email you wish to be notified at
