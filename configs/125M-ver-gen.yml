@@ -1,0 +1,80 @@
+{
+
+   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/merged/les_faits_v2",
+   
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small_sc_mask_3x_wiki",
+   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_small_sc_mask_3x_wiki",
+
+   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
+   "tokenizer_type": "HFTokenizer",
+
+
+   # batch / data settings
+   "train_micro_batch_size_per_gpu": 32,
+   "data-impl": "mmap",
+   "split": "949,50,1",
+
+   "gradient_accumulation_steps": 4,
+
+   "pipe-parallel-size": 1,
+   "model-parallel-size": 1,
+   "num-layers": 12,
+   "hidden-size": 768,
+   "num-attention-heads": 12,
+   "seq-length": 2048,
+   "max-position-embeddings": 2048,
+   "norm": "layernorm",
+   "pos-emb": "rotary",
+   "no-weight-tying": true,
+   "scaled-upper-triang-masked-softmax-fusion": true,
+   "bias-gelu-fusion": true,
+   "optimizer": {
+     "type": "Adam",
+     "params": {
+       "lr": 0.0006,
+       "betas": [0.9, 0.999],
+       "eps": 1.0e-8
+     }
+   },
+   "zero_optimization": {
+    "stage": 1,
+    "allgather_partitions": true,
+    "allgather_bucket_size": 500000000,
+    "overlap_comm": true,
+    "reduce_scatter": true,
+    "reduce_bucket_size": 500000000,
+    "contiguous_gradients": true
+  },
+
+   "checkpoint-activations": true,
+   "checkpoint-num-layers": 1,
+   "partition-activations": true,
+   "synchronize-each-layer": true,
+   "gradient_clipping": 1.0,
+   "weight-decay": 0.0,
+   "hidden-dropout": 0.0,
+   "attention-dropout": 0.0,
+   "fp16": {
+     "enabled": true,
+     "loss_scale": 0,
+     "loss_scale_window": 1000,
+     "hysteresis": 2,
+     "min_loss_scale": 1
+   },
+   "train-iters": 35715,
+   "lr-decay-iters": 35715,
+   "distributed-backend": "nccl",
+   "lr-decay-style": "cosine",
+   "warmup": 0.01,
+   "checkpoint-factor": 2000,
+   "eval-interval": 1000,
+   "eval-iters": 10,
+   "log-interval": 100,
+   "steps_per_print": 10,
+
+
+   "keep-last-n-checkpoints": 4,
+   "wall_clock_breakdown": true,
+
+   "exit_interval": 890
+}
