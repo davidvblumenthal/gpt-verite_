@@ -120,6 +120,8 @@ class Encoder(object):
         # DEBUGING
         assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
 
+        #write_tokenized_text_to_file(ids, "./final_test.jsonl")
+
         return ids, len(text)
 
 
@@ -332,10 +334,10 @@ def main():
 
 """
 
-python tools/preprocess_data_loss_mask.py \
-            --input /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/sample_Wikipedia_20221201.jsonl \
-            --output-prefix ../data/padding/verzweifelt \
-            --vocab /Users/davidblumenthal/Documents/Master_Thesis/Evaluation/gpt-ver/data/tokenizer-gpt-ver.json \
+python preprocess_data_loss_mask.py \
+            --input /home/kit/stud/ukmwn/master_thesis/data/Wikipedia/Wikipedia_sample_en.jsonl \
+            --output-prefix ../../data/padding/verzweifelt \
+            --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
             --loss-mask-multiple 2 \

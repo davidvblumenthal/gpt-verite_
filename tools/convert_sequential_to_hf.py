@@ -337,13 +337,15 @@ if __name__ == "__main__":
         input_ids = tokenizer.encode("Hello, I am testing ", return_tensors="pt")
         input_ids.to(device)
 
+        """
         print(
             tokenizer.decode(
                 hf_model.generate(                   
                 )[0]
             )
         )
-
+        """
+        
     if args.upload:
         repo_name = input("Provide a repository name for the HF Hub: ")
         create_repo(repo_name, repo_type="model", private=False, use_auth_token=True)

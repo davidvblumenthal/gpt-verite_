@@ -44,8 +44,8 @@ def main(args):
 
 """
 
-python merge_datasets.py --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/text \
-                         --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/tokenized/merged/les_faits_v2_text
+python merge_datasets.py --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/padding_tokenized/sc_mask \
+                         --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/padding_tokenized/merged/les_faits_v2P_sc_mask
 
 """
 
