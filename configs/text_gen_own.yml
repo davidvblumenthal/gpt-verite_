@@ -1,0 +1,21 @@
+# Parameters used for text generation
+# Make sure `load` is specified somewhere else
+{
+  # Text gen type: `input-file`, `unconditional` or `interactive`
+  "text-gen-type": "input-file",
+
+  # Params for all
+  "maximum_tokens": 150,
+  "prompt_end": "\n",
+  "temperature": 0.0,
+  "top_p": 0.0,
+  "top_k": 0,
+  "recompute": false,
+
+  # `unconditional`: samples
+  # "num-samples": 10,
+
+  # input/output file
+  "sample-input-file": "/home/kit/stud/ukmwn/master_thesis/evaluation/FactualityPrompt/prompts/factual_prompts.txt",
+  "sample-output-file": "sample_output.txt",
+}

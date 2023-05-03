@@ -25,4 +25,4 @@ WORKING_DIR="/home/kit/stud/ukmwn/master_thesis/gpt-verite_"
 pushd $WORKING_DIR
 
 
-python ./deepy.py ./generate.py -d configs 3x_wiki_sc_mask.yml text_generation.yml
+python ./deepy.py ./generate.py -d configs 125M-ver-gen.yml text_gen_own.yml
