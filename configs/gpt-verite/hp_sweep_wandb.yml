@@ -1,0 +1,50 @@
+command:
+  - ${env}
+  - ${interpreter}
+  - ${program}
+  - train.py
+  - 1-3B_OPT.yml
+#  - configs/local_setup.yml
+method: random
+metric:
+  goal: minimize
+  name: validation/lm_loss
+
+parameters:
+  mup_init_scale:
+    max: 5
+    min: 0
+  
+  mup_attn_temp:
+    max: 10
+    min: 0
+  
+  mup_embedding_mult:
+    max: 15
+    min: 0
+  
+  mup_output_temp:
+    max: 10
+    min: 0
+  
+  mup_width_scale:
+    max: 10
+    min: 0
+
+  mup-rp-embedding-mult:
+    max: 10
+    min: 0
+
+
+  optimizer:
+    parameters:
+      params:
+        parameters:
+          lr:
+            max: 0.001
+            min: 0.0002
+  
+  train-iters:
+    value: 2500
+
+program: deepy.py
