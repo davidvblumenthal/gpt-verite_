@@ -28,7 +28,7 @@ pushd $WORKING_DIR
 
 
 LIST_DATASETS=("sc_loss" "no_sc_loss")
-LIST_USE_LMASK=("--loss-mask" "")
+LIST_USE_LMASK=("" "")
 
 DATASET=${LIST_DATASETS[$SLURM_ARRAY_TASK_ID]}
 USE_LMASK=${LIST_USE_LMASK[$SLURM_ARRAY_TASK_ID]}
@@ -38,8 +38,8 @@ echo "USE LOSS MASK: "$USE_LMASK
 
 
 python preprocess_data_loss_mask.py \
-            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/${DATASET}.jsonl \
-            --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/padding_tokenized/${DATASET} \
+            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v1/${DATASET}.jsonl \
+            --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v1/padding_tokenized/${DATASET} \
             --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
@@ -52,4 +52,7 @@ python preprocess_data_loss_mask.py \
 
 
 
+
 #             --pad-to-max-length \
+#             $USE_LMASK
+#              \
