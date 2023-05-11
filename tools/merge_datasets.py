@@ -51,13 +51,6 @@ def main(args):
 
     builder.finalize(args.output_prefix + ".idx")
 
-"""
-
-python merge_datasets.py --input /home/kit/stud/ukmwn/master_thesis/data/les_faits/temp \
-                         --output-prefix /home/kit/stud/ukmwn/master_thesis/data/les_faits/merged/les_faits
-
-"""
-
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
