@@ -43,6 +43,8 @@ from utils.loss_mask_utils import split_ids_at_endofsentence_token
 
 from utils.loss_mask_utils import  write_tokenized_text_to_file
 
+from utils.padding_utils import discard_small_samples
+
 import logging
 
 logger = logging.getLogger(__name__)
@@ -107,6 +109,29 @@ class Encoder(object):
                     doc_ids[-1].extend([Encoder.tokenizer.pad] * num_pad_tokens)
                     doc_loss_mask[-1].extend([0] * num_pad_tokens)
 
+                if self.args.discard_samples_smaller is not None:                   
+                    # Check if sequence equal or bigger than max_length
+                    # equal
+                    if len(doc_ids[-1]) == max_length:
+                        doc_ids = doc_ids
+                        doc_loss_mask = doc_loss_mask
+                    # bigger
+                    elif len(doc_ids[-1]) > max_length:
+                        doc_ids, doc_loss_mask = discard_small_samples(
+                        doc_ids=doc_ids[-1],
+                        loss_mask=doc_loss_mask[-1],
+                        pad_token=Encoder.tokenizer.pad,
+                        threshold=self.args.discard_samples_smaller
+                        )
+
+                    # Case that should not happend
+                    else: 
+                        print("Something went wrong! Length should be either equal or bigger than max length. But is is smaller!!!")
+                        sys.exit()
+
+                    
+
+
                 # Sanity check if document is exactly max length or divisible by max length
                 assert len(doc_ids[-1]) % max_length == 0, f"Document length {len(doc_ids[-1])} is not equal to or divisible by max length"
 
@@ -118,9 +143,10 @@ class Encoder(object):
             ids["sc_mask"] = doc_loss_mask
 
         # DEBUGING
-        assert len(doc_loss_mask[0]) == len(doc_ids[0]), "loss_mask and sentence should have same length"
-
         #write_tokenized_text_to_file(ids, "./final_test.jsonl")
+        assert len(doc_loss_mask[0]) == len(doc_ids[0]), f"loss_mask {len(doc_loss_mask[0])} and sentence {len(doc_ids[0])} should have same length"
+
+        
 
         return ids, len(text)
 
@@ -182,6 +208,12 @@ def get_args():
         default=False,
         help="Pad documents to the maximum length of the model.",
     )
+    group.add_argument(
+        "--discard-samples-smaller",
+        type=int,
+        help="Sample will be discarded if it contains less than 50 tokens"
+    )
+
     group.add_argument(
         "--loss-mask-multiple",
         type=float,

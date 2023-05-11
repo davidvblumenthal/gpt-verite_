@@ -38,13 +38,14 @@ echo "USE LOSS MASK: "$USE_LMASK
 
 
 python preprocess_data_loss_mask.py \
-            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/${DATASET}.jsonl \
-            --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v2/padding_tokenized/${DATASET} \
+            --input /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v1/${DATASET}.jsonl \
+            --output-prefix /pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v1/800T_pad/${DATASET} \
             --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
             --tokenizer-type HFGPTVerTokenizer \
-            --loss-mask-multiple 2 \
+            --loss-mask-multiple 1 \
             --pad-to-max-length \
+            --discard-samples-smaller 800 \
             --append-eod \
             --workers 30 \
             $USE_LMASK

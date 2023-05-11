@@ -3,16 +3,16 @@ command:
   - ${interpreter}
   - ${program}
   - train.py
-  - 1-3B_OPT.yml
+  - configs/gpt-verite/1-3B_OPT.yml
 #  - configs/local_setup.yml
 method: random
 metric:
   goal: minimize
-  name: validation/lm_loss
+  name: train/lm_loss
 
 parameters:
   mup_init_scale:
-    max: 5
+    max: 2
     min: 0
   
   mup_attn_temp:
@@ -21,7 +21,7 @@ parameters:
   
   mup_embedding_mult:
     max: 15
-    min: 0
+    min: 5
   
   mup_output_temp:
     max: 10
@@ -31,7 +31,7 @@ parameters:
     max: 10
     min: 0
 
-  mup-rp-embedding-mult:
+  mup_rp-embedding_mult:
     max: 10
     min: 0
 
@@ -45,6 +45,6 @@ parameters:
             min: 0.0002
   
   train-iters:
-    value: 2500
+    value: 986
 
 program: deepy.py

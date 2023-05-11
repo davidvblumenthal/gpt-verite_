@@ -2,32 +2,38 @@
 
    "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/hp_sweep_ds/v2/merged/HP_Sweep",
    
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1",
+   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1",
    
 
    "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
-   "pipe-parallel-size": 1,
+   "pipe-parallel-size": 0,
    "model-parallel-size": 1,
 
 
-   "train_micro_batch_size_per_gpu": 24,
-   "gradient_accumulation_steps": 18,
+   "train_micro_batch_size_per_gpu": 16,
    "data-impl": "mmap",
    "split": "1000,0,0",
 
+   "gradient_accumulation_steps": 4,
+
 
    "num-layers": 12,
-   "hidden-size": 256,
-   "num-attention-heads": 16,
+   "hidden-size": 768,
+   "num-attention-heads": 12,
    "seq-length": 2048,
    "max-position-embeddings": 2048,
+   "norm": "layernorm",
    "pos-emb": "rotary",
-   "rotary-pct": 0.25,
    "no-weight-tying": true,
-   "gpt-j-residual": true,
-   "output-layer-parallelism": "column",
+   "scaled-upper-triang-masked-softmax-fusion": true,
+   "bias-gelu-fusion": true,
 
+   # init methods
+   "init_method": "small_init",
+   "output_layer_init_method": "wang_init",
    
    "optimizer": {
      "type": "Adam",
@@ -39,24 +45,20 @@
    },
    "min_lr": 0.00006,
 
-   "use-mup": false,
-   "save-base-shapes": false,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
-   "base-shapes-file": "/home/kit/stud/ukmwn/master_thesis/gpt-verite_/configs/gpt-verite/1-3B_OPT_base_shapes", # # load base shapes from this file
-   "coord-check": false, # generate coord check plots to verify mup's implementation in neox
-
-   "mup-init-scale": 1.0,
-   "mup-attn-temp": 1.0,
-   "mup-output-temp": 1.0,
-   "mup-embedding-mult": 1.0,
-   "mup-rp-embedding-mult": 1.0,
-
-
+   "zero_optimization": {
+    "stage": 0,
+    "allgather_partitions": true,
+    "allgather_bucket_size": 500000000,
+    "overlap_comm": true,
+    "reduce_scatter": true,
+    "reduce_bucket_size": 500000000,
+    "contiguous_gradients": true
+  },
 
    "checkpoint-activations": true,
    "checkpoint-num-layers": 1,
    "partition-activations": true,
    "synchronize-each-layer": true,
-
    "gradient_clipping": 1.0,
    "weight-decay": 0.1,
    "hidden-dropout": 0.0,
@@ -70,21 +72,22 @@
      "min_loss_scale": 1
    },
 
-   "train-iters": 986,
-   "lr-decay-iters": 986,
+   "train-iters": 100,
+   "lr-decay-iters": 100,
    "distributed-backend": "nccl",
-   "lr-decay-style": "linear",
+   "lr-decay-style": "cosine",
    "warmup": 0.01,
    "checkpoint-factor": 2000,
    "eval-interval": 1000,
    "eval-iters": 10,
-   "log-interval": 1,
-   "steps_per_print": 1,
+   "log-interval": 100,
+   "steps_per_print": 10,
 
-   #"wandb_project": "GPT-Verite",
+   "wandb_project": "GPT-Verite",
+   "wandb_group": "125M_padding_v1",
 
    "keep-last-n-checkpoints": 4,
    "wall_clock_breakdown": true,
 
-   "exit_interval": 1500
+   "exit_interval": 15
 }
