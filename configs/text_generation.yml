@@ -2,7 +2,7 @@
 # Make sure `load` is specified somewhere else
 {
   # Text gen type: `input-file`, `unconditional` or `interactive`
-  "text-gen-type": "input-file",
+  "text_gen_type": "unconditional",
 
   # Params for all
   "maximum_tokens": 150,
@@ -13,9 +13,9 @@
   "recompute": false,
 
   # `unconditional`: samples
-  # "num-samples": 10,
+  "num_samples": 10,
 
   # input/output file
-  "sample-input-file": "/home/kit/stud/ukmwn/master_thesis/evaluation/FactualityPrompt/prompts/factual_prompts.txt",
-  "sample-output-file": "sample_output.txt",
+  "sample_input_file": "sample_input.txt",
+  "sample_output_file": "sample_output.txt",
 }
