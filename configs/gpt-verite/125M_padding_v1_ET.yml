@@ -1,12 +1,12 @@
 {
 
-   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/v1/800T_pad/merged/les_faits",
+   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/entity_tokenizer/merged/entity",
    
-   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1",
-   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1",
+   "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1_ET",
+   "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1_ET",
    
 
-   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
+   "vocab-file": "/pfs/work7/workspace/scratch/ukmwn-les_faits/trained_tokenizers/gpt-vérité_entity_tokenizer/tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
    "pipe-parallel-size": 0,
@@ -82,8 +82,8 @@
      "min_loss_scale": 1
    },
 
-   "train-iters": 49126,
-   "lr-decay-iters": 49126,
+   "train-iters": 50313,
+   "lr-decay-iters": 50313,
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
@@ -97,7 +97,7 @@
 
    "use_wandb": true,
    "wandb_project": "GPT-Verite",
-   "wandb_group": "125M_padding_v1",
+   "wandb_group": "125M_padding_v1_ET",
 
    "keep-last-n-checkpoints": 4,
 

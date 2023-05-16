@@ -57,7 +57,7 @@ def preprocess_loss_mask(document: str) -> str:
 
 
 
-def split_ids_at_endofsentence_token(token_ids: list, special_token_id=50257) -> list:  
+def split_ids_at_endofsentence_token(token_ids: list, special_token_id: int) -> list:  
 
     sublists = [list(group) for key, group in groupby(token_ids, lambda x: x == special_token_id) if not key]
         

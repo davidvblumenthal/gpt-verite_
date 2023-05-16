@@ -69,11 +69,13 @@ class Encoder(object):
             # INSERTED CODE
             if self.args.loss_mask:
                 # Temporarliy add special token to tokenizer
+                # Get the token id of the <|endofsentence|> token
+                eos_id = self.tokenizer.token_to_id('<|endofsentence|>')
                 #Encoder.tokenizer.add_special_tokens(["<|endofsentence|>"], special_tokens=True)
                 text = preprocess_loss_mask(text)
                 
                 text_ids = Encoder.tokenizer.tokenize(text)
-                text_ids = split_ids_at_endofsentence_token(text_ids)
+                text_ids = split_ids_at_endofsentence_token(text_ids, special_token_id=eos_id)
                 text_ids, loss_mask = construct_loss_mask(text_ids, self.args.loss_mask_multiple)
             
             else:

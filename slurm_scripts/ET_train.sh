@@ -34,7 +34,7 @@ conda activate training_main
 WORKING_DIR="/home/kit/stud/ukmwn/master_thesis/gpt-verite_"
 pushd $WORKING_DIR
 
-python ./deepy.py ./train.py -d configs gpt-verite/125M_padding_v1.yml
+python ./deepy.py ./train.py -d configs gpt-verite/125M_padding_v1_ET.yml
 
 
 # Submission logic for resubmit
