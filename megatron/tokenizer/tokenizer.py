@@ -273,8 +273,10 @@ class HFGPTVerTokenizer(AbstractTokenizer):
         self.tokenizer = Tokenizer.from_file(vocab_file)
         self.eod_id = self.tokenizer.token_to_id("<|endoftext|>")
         self.pad_id = self.tokenizer.token_to_id("<|padding|>")
-
-        self.tokenizer.add_special_tokens(["<|endofsentence|>"])#, special_tokens=True)
+        
+        # Special token for sc mask
+        self.tokenizer.add_special_tokens(["<|endofsentence|>"])
+        self.eos_id = self.tokenizer.token_to_id("<|endofsentence|>")
 
     @property
     def vocab_size(self):
@@ -304,6 +306,10 @@ class HFGPTVerTokenizer(AbstractTokenizer):
     @property
     def pad(self):
         return self.pad_id
+    
+    @property
+    def eos(self):
+        return self.eos_id
 
 
 class HFGPT2Tokenizer(AbstractTokenizer):

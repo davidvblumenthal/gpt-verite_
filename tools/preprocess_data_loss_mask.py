@@ -69,13 +69,11 @@ class Encoder(object):
             # INSERTED CODE
             if self.args.loss_mask:
                 # Temporarliy add special token to tokenizer
-                # Get the token id of the <|endofsentence|> token
-                eos_id = self.tokenizer.token_to_id('<|endofsentence|>')
                 #Encoder.tokenizer.add_special_tokens(["<|endofsentence|>"], special_tokens=True)
                 text = preprocess_loss_mask(text)
                 
                 text_ids = Encoder.tokenizer.tokenize(text)
-                text_ids = split_ids_at_endofsentence_token(text_ids, special_token_id=eos_id)
+                text_ids = split_ids_at_endofsentence_token(text_ids, special_token_id=Encoder.tokenizer.eos_id)
                 text_ids, loss_mask = construct_loss_mask(text_ids, self.args.loss_mask_multiple)
             
             else:
@@ -300,6 +298,7 @@ def main():
     tokenizer = build_tokenizer(args)
     print(f"Vocab size: {tokenizer.vocab_size}")
     print(f"Output prefix: {args.output_prefix}")
+    print(f"<|endofsentence|> token id: {tokenizer.eos_id}")
 
     # build a semaphore object to stop `yield_from_files` from getting ahead of encoder.encode and
     # hence building up memory
@@ -327,10 +326,11 @@ def main():
         output_idx_files[key] = "{}_{}.idx".format(
             args.output_prefix, key
         )
+        logger.info(f"Final vocab size used for the builder object: {tokenizer.vocab_size - 1}")
         builders[key] = indexed_dataset.make_builder(
             output_bin_files[key],
             impl=args.dataset_impl,
-            vocab_size=tokenizer.vocab_size,
+            vocab_size=tokenizer.vocab_size - 1,
         )
 
     # actually do tokenization

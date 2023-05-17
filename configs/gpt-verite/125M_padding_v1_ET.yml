@@ -1,6 +1,6 @@
 {
 
-   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/entity_tokenizer/merged/entity",
+   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/entity_tokenizer/merged/LF_ET",
    
    "save": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1_ET",
    "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1_ET",
@@ -82,8 +82,8 @@
      "min_loss_scale": 1
    },
 
-   "train-iters": 50313,
-   "lr-decay-iters": 50313,
+   "train-iters": 49743,
+   "lr-decay-iters": 49743,
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
