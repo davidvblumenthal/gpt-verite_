@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name training_125M-sc_loss # Name for your job
+#SBATCH --job-name 160M_ET # Name for your job
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8

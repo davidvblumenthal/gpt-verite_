@@ -82,8 +82,8 @@
      "min_loss_scale": 1
    },
 
-   "train-iters": 49743,
-   "lr-decay-iters": 49743,
+   "train-iters": 49744,
+   "lr-decay-iters": 49744,
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
