@@ -6,7 +6,7 @@
    "load": "/home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1_ET",
    
 
-   "vocab-file": "/pfs/work7/workspace/scratch/ukmwn-les_faits/trained_tokenizers/gpt-vérité_entity_tokenizer/tokenizer.json",
+   "vocab-file": "/pfs/work7/workspace/scratch/ukmwn-les_faits/trained_tokenizers/gpt-verite_entity_tokenizer/tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
    "pipe-parallel-size": 0,
