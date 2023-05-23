@@ -17,8 +17,8 @@
 
 
    "num-layers": 38,
-   "hidden-size": 256,
-   "num-attention-heads": 2,
+   "hidden-size": 512,
+   "num-attention-heads": 16,
    "seq-length": 2048,
    "max-position-embeddings": 2048,
    "pos-emb": "rotary",
@@ -27,7 +27,7 @@
    "gpt-j-residual": true,
    "output-layer-parallelism": "column",
 
-   #"attention_config": [[["flash"], 38]],
+   #"attention_config": [[["flash"], 24]],
    "scaled_upper_triang_masked_softmax_fusion": true,
    "bias_gelu_fusion": true,
    
@@ -41,19 +41,21 @@
    },
    "min_lr": 0.0006,
 
-
-   "init_method": "scaled_normal",
+   "init_method": "normal",
+   "output_layer_init_method": "scaled_normal",
    "init_method_std": 0.02,
 
+
+
    "use-mup": true,
-   "save-base-shapes": true,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
+   "save-base-shapes": false,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
    "base-shapes-file": "/p/project/hai_verite/training_repository/gpt-verite_/configs/gpt-verite/proxy_shape/", # # load base shapes from this file
    "coord-check": false, # generate coord check plots to verify mup's implementation in neox
 
    "mup-init-scale": 1.0,
    "mup-attn-temp": 1.0,
    "mup-output-temp": 1.0,
-   "mup-embedding-mult": 10.0,
+   "mup-embedding-mult": 1.0,
    "mup-rp-embedding-mult": 1.0,
 
    "zero_optimization": {
@@ -77,13 +79,7 @@
    "attention-dropout": 0.0,
 
    # precision settings
-   "fp16": {
-     "enabled": true,
-     "loss_scale": 0,
-     "loss_scale_window": 1000,
-     "hysteresis": 2,
-     "min_loss_scale": 1
-   },
+   "precision": "bfloat16",
 
    "fp32_allreduce": true,
 
@@ -98,9 +94,9 @@
    "log-interval": 1,
    "steps_per_print": 1,
 
-   "use_wandb": true,
+   "use_wandb": false,
    "wandb_project": "GPT-Verite",
-   "wandb_group": "1.4B-GPT-Verite_opt_v3",
+   "wandb_group": "MUP_Standard",
 
    "keep-last-n-checkpoints": 4,
    "wall_clock_breakdown": true,

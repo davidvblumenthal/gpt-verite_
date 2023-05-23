@@ -32,4 +32,4 @@ conda activate training_main
 WORKING_DIR="/p/project/hai_verite/training_repository/gpt-verite_"
 pushd $WORKING_DIR
 
-python ./deepy.py ./train.py -d configs gpt-verite/1-4B_OPT_MUP.yml
+python ./deepy.py ./train.py -d configs gpt-verite/ProxyModel.yml
