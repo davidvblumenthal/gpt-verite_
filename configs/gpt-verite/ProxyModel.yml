@@ -2,6 +2,7 @@
 
    "data_path": "/p/project/hai_verite/training_repository/data/merged/les_faits",
    
+   
    "vocab-file": "/p/project/hai_verite/training_repository/artefacts/tokenizer/gpt-verite_tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
@@ -16,8 +17,8 @@
 
 
    "num-layers": 38,
-   "hidden-size": 1664,
-   "num-attention-heads": 16,
+   "hidden-size": 256,
+   "num-attention-heads": 2,
    "seq-length": 2048,
    "max-position-embeddings": 2048,
    "pos-emb": "rotary",
@@ -26,29 +27,28 @@
    "gpt-j-residual": true,
    "output-layer-parallelism": "column",
 
-   "attention_config": [[["flash"], 38]],
+   #"attention_config": [[["flash"], 38]],
    "scaled_upper_triang_masked_softmax_fusion": true,
    "bias_gelu_fusion": true,
    
    "optimizer": {
      "type": "Adam",
      "params": {
-       "lr": 0.0002,
+       "lr": 0.006,
        "betas": [0.9, 0.95],
        "eps": 1.0e-8
      }
    },
-   "min_lr": 0.00002,
+   "min_lr": 0.0006,
 
 
-   "init_method": "small_init",
-   "output_layer_init_method": "wang_init",
+   "init_method": "scaled_normal",
    "init_method_std": 0.02,
 
-   "use-mup": false,
-   "save-base-shapes": false,
-   "base-shapes-file": "/home/kit/stud/ukmwn/master_thesis/gpt-verite_/configs/gpt-verite/1-4B_OPT_base_shapes/",
-   "coord-check": false,
+   "use-mup": true,
+   "save-base-shapes": true,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
+   "base-shapes-file": "/p/project/hai_verite/training_repository/gpt-verite_/configs/gpt-verite/proxy_shape/", # # load base shapes from this file
+   "coord-check": false, # generate coord check plots to verify mup's implementation in neox
 
    "mup-init-scale": 1.0,
    "mup-attn-temp": 1.0,
@@ -76,15 +76,22 @@
    "hidden-dropout": 0.0,
    "attention-dropout": 0.0,
 
+   # precision settings
+   "fp16": {
+     "enabled": true,
+     "loss_scale": 0,
+     "loss_scale_window": 1000,
+     "hysteresis": 2,
+     "min_loss_scale": 1
+   },
 
-   "precision": "bfloat16",
    "fp32_allreduce": true,
 
    "train-iters": 21834,
    "lr-decay-iters": 21834,
    "distributed-backend": "nccl",
-   "lr-decay-style": "cosine",
-   "warmup": 0.01,
+   "lr-decay-style": "linear",
+   "warmup": 0.02,
    "checkpoint-factor": 2000,
    "eval-interval": 1000,
    "eval-iters": 10,
@@ -93,7 +100,7 @@
 
    "use_wandb": true,
    "wandb_project": "GPT-Verite",
-   "wandb_group": "1.4B-GPT-Verite-practice",
+   "wandb_group": "1.4B-GPT-Verite_opt_v3",
 
    "keep-last-n-checkpoints": 4,
    "wall_clock_breakdown": true,
