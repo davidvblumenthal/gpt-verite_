@@ -3,7 +3,7 @@ command:
   - ${interpreter}
   - ${program}
   - train.py
-  - configs/gpt-verite/1-3B_OPT.yml
+  - configs/gpt-verite/ProxyModel.yml
 #  - configs/local_setup.yml
 method: random
 metric:
@@ -20,21 +20,20 @@ parameters:
     min: 0
   
   mup_embedding_mult:
-    max: 15
-    min: 5
+    max: 12
+    min: 0
   
   mup_output_temp:
-    max: 10
+    max: 5
     min: 0
   
   mup_width_scale:
-    max: 10
+    max: 5
     min: 0
 
-  mup_rp-embedding_mult:
-    max: 10
-    min: 0
-
+  lr:
+    max: 0.001
+    min: 0.0002
 
   optimizer:
     parameters:
@@ -45,6 +44,6 @@ parameters:
             min: 0.0002
   
   train-iters:
-    value: 986
+    value: 1971
 
 program: deepy.py
