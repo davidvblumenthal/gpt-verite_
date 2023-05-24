@@ -1,24 +1,23 @@
 {
 
-   "data_path": "/pfs/work7/workspace/scratch/ukmwn-les_faits/les_faits_final/hp_sweep_ds/v2/merged/with_valid/merged/HP_SWEEP_v200",
-   
-   
-   "vocab-file": "/home/kit/stud/ukmwn/master_thesis/data/les_faits/tokenizer/gpt-ver-tokenizer.json",
+   "data_path": "/p/project/hai_verite/training_repository/data/hp_sweep/HP_SWEEP_v200",
+     
+   "vocab-file": "/p/project/hai_verite/training_repository/artefacts/tokenizer/gpt-verite_tokenizer.json",
    "tokenizer_type": "HFTokenizer",
 
    "pipe-parallel-size": 0,
    "model-parallel-size": 1,
 
 
-   "train_micro_batch_size_per_gpu": 64,
-   "gradient_accumulation_steps": 1,
+   "train_micro_batch_size_per_gpu": 2,
+   "gradient_accumulation_steps": 2,
    "data-impl": "mmap",
    "split": "999.55,0.45,0",
 
 
-   "num-layers": 38,
-   "hidden-size": 256,
-   "num-attention-heads": 2,
+   "num-layers": 12,
+   "hidden-size": 756,
+   "num-attention-heads": 4,
    "seq-length": 2048,
    "max-position-embeddings": 2048,
    "pos-emb": "rotary",
@@ -49,13 +48,13 @@
 
    "use-mup": true,
    "save-base-shapes": false,   # this only needs to be enabled once in order to generate the base-shapes-file on each rank
-   "base-shapes-file": "/home/kit/stud/ukmwn/master_thesis/gpt-verite_/configs/gpt-verite/proxy_shape", # # load base shapes from this file
-   "coord-check": false, # generate coord check plots to verify mup's implementation in neox
+   "base-shapes-file": "/p/project/hai_verite/training_repository/gpt-verite_/configs/gpt-verite/test_impl/", # # load base shapes from this file
+   "coord-check": true, # generate coord check plots to verify mup's implementation in neox
 
-   "mup-init-scale": 2.0,
+   "mup-init-scale": 1.0,
    "mup-attn-temp": 1.0,
    "mup-output-temp": 1.0,
-   "mup-embedding-mult": 10.0,
+   "mup-embedding-mult": 1.0,
    "mup-rp-embedding-mult": 1.0,
 
    "zero_optimization": {
@@ -89,12 +88,12 @@
    "lr-decay-style": "linear",
    "warmup": 0.02,
    "checkpoint-factor": 5000,
-   "eval-interval": 1000,
+   "eval-interval": 125,
    "eval-iters": 10,
    "log-interval": 1,
    "steps_per_print": 1,
 
-   "use_wandb": true,
+   "use_wandb": false,
    "wandb_project": "GPT-Verite",
    "wandb_group": "SWEEP",
 

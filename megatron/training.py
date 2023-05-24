@@ -161,8 +161,8 @@ def mup_coord_check(neox_args, timers, lr_scheduler, train_data_iterator):
         neox_args, timers, lr_scheduler, models, train_data_iterator, mup=False
     )
 
-    plot_coord_data(df_up, save_to=f"coord_check_up.{torch.distributed.get_rank()}.jpg")
-    plot_coord_data(df_sp, save_to=f"coord_check_sp.{torch.distributed.get_rank()}.jpg")
+    plot_coord_data(df_up, save_to=f"coord_check_up.{torch.distributed.get_rank()}.jpg", subplot_height=60)
+    plot_coord_data(df_sp, save_to=f"coord_check_sp.{torch.distributed.get_rank()}.jpg", subplot_height=60)
 
     print_rank_0("Saved coord check plots... exiting")
     sys.exit(1)
