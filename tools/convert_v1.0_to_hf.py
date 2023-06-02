@@ -269,10 +269,11 @@ def convert(input_checkpoint_path, loaded_config, output_checkpoint_path):
     return hf_model
 
 """
-python convert_v1.0_to_hf.py \
-    --input_dir /home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1/global_step106 \
-    --config_file /home/kit/stud/ukmwn/master_thesis/weights/125m_padding_v1/global_step106/configs/125M_padding_v1.yml \
-    --output_dir /home/kit/stud/ukmwn/master_thesis/mup-base-shapes
+python convert_sequential_to_hf.py \
+    --input_dir /p/project/hai_verite/training_repository/artefacts/checkpoints/160M_pad_sc_4/global_step49126 \
+    --config_file /p/project/hai_verite/training_repository/artefacts/checkpoints/160M_pad_sc_4/global_step49126/configs/160M_paddding_v1_sc_4.yml \
+    --output_dir /p/project/hai_verite/training_repository/artefacts/huggingface_models/padding_sc4 \
+    --upload
 """
 
 if __name__ == "__main__":

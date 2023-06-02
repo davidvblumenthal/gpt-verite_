@@ -1,0 +1,97 @@
+{
+
+   "data_path": "/p/project/hai_verite/training_repository/data/merged/les_faits",
+   
+   "vocab-file": "/p/project/hai_verite/training_repository/artefacts/tokenizer/gpt-verite_tokenizer.json",
+   "tokenizer_type": "HFTokenizer",
+
+   "pipe-parallel-size": 0,
+   "model-parallel-size": 1,
+
+
+   "train_micro_batch_size_per_gpu": 24,
+   "gradient_accumulation_steps": 12,
+   "data-impl": "mmap",
+   "split": "999,1,0",
+
+
+   "num-layers": 38,
+   "hidden-size": 1664,
+   "num-attention-heads": 16,
+   "seq-length": 2048,
+   "max-position-embeddings": 2048,
+   "pos-emb": "rotary",
+   "rotary-pct": 0.25,
+   "no-weight-tying": true,
+   "gpt-j-residual": true,
+   "output-layer-parallelism": "column",
+
+   "attention_config": [[["flash"], 38]],
+   "scaled_upper_triang_masked_softmax_fusion": true,
+   "bias_gelu_fusion": true,
+   
+   "optimizer": {
+     "type": "Adam",
+     "params": {
+       "lr": 0.0002,
+       "betas": [0.9, 0.95],
+       "eps": 1.0e-8
+     }
+   },
+   "min_lr": 0.00002,
+
+
+   "init_method": "small_init",
+   "output_layer_init_method": "wang_init",
+   "init_method_std": 0.02,
+
+
+   "zero_optimization": {
+    "stage": 2,
+    "allgather_partitions": true,
+    "allgather_bucket_size": 500000000,
+    "overlap_comm": true,
+    "reduce_scatter": true,
+    "reduce_bucket_size": 500000000,
+    "contiguous_gradients": true
+  },
+
+   "checkpoint-activations": true,
+   "checkpoint-num-layers": 1,
+   "partition-activations": true,
+   "synchronize-each-layer": true,
+
+   "gradient_clipping": 1.0,
+   "weight-decay": 0.1,
+   "hidden-dropout": 0.0,
+   "attention-dropout": 0.0,
+
+
+   "precision": "bfloat16",
+   "fp32_allreduce": true,
+
+   "train-iters": 19722, 
+   #num_nodes = 10
+   #gpu_per_node = 4
+   #batch_size = 32
+   #gradient_accu = 1
+   #Batch size 1280 - Number of real tokens in batch: 1310720 - Iterations: 19721.4140625
+   "lr-decay-iters": 19722,
+   "distributed-backend": "nccl",
+   "lr-decay-style": "cosine",
+   "warmup": 0.01,
+   "checkpoint-factor": 2000,
+   "eval-interval": 1000,
+   "eval-iters": 10,
+   "log-interval": 10,
+   "steps_per_print": 1,
+
+   "use_wandb": true,
+   "wandb_project": "GPT-Verite",
+   "wandb_group": "1.4B-GPT-Verite-practice",
+
+   "keep-last-n-checkpoints": 4,
+   "wall_clock_breakdown": true,
+
+   "exit_interval": 1500
+}

@@ -6,15 +6,13 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 
-#SBATCH --time=24:00:00
+#SBATCH --time=15:00:00
 #SBATCH --partition=booster
 
 #SBATCH --mem=180
 #SBATCH --gpus-per-node=4              # --gres=gpu:4
 
-
-# job logic below
-
+# Load modules
 module --force purge
 module load Stages/2023
 
@@ -25,11 +23,20 @@ module load OpenMPI/4.1.4
 module load CUDA/11.7
 module load git
 
-# ACTIVATE ANACONDA
+
 eval "$(conda shell.bash hook)"
 conda activate training_main
 
 WORKING_DIR="/p/project/hai_verite/training_repository/gpt-verite_"
 pushd $WORKING_DIR
 
-python ./deepy.py ./train.py -d configs gpt-verite/optimal_models/160M.yml
+python ./deepy.py ./train.py -d configs gpt-verite/160M_paddding_v1_sc_4.yml
+
+
+#sbatch --partition=booster $0
+
+
+
+
+
+
