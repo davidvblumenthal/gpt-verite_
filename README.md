@@ -1,6 +1,6 @@
-## GPT-Vérité
+# GPT-Vérité
 
-# Contents
+## Contents
 
 * [Quick Start](#quick-start)
   * [Environment and Dependencies](#environment-and-dependencies)
