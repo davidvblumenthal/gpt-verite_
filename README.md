@@ -1,20 +1,4 @@
-[![GitHub issues](https://img.shields.io/github/issues/EleutherAI/gpt-neox)](https://github.com/EleutherAI/gpt-neox/issues)
-[<img src="https://raw.githubusercontent.com/wandb/assets/main/wandb-github-badge-28.svg" alt="Weights & Biases monitoring" height=20>](https://wandb.ai/eleutherai/neox)
-
-# GPT-NeoX
-
-This repository records [EleutherAI](https://www.eleuther.ai)'s library for training large-scale language models on GPUs. Our current framework is based on NVIDIA's [Megatron Language Model](https://github.com/NVIDIA/Megatron-LM) and has been augmented with techniques from [DeepSpeed](https://www.deepspeed.ai) as well as some novel optimizations. We aim to make this repo a centralized and accessible place to gather techniques for training large-scale autoregressive language models, and accelerate research into large-scale training.
-
-For those looking for a TPU-centric codebase, we recommend [Mesh Transformer JAX](https://github.com/kingoflolz/mesh-transformer-jax).
-
-**If you are not looking to train models with billions of parameters from scratch, this is likely the wrong library to use. For generic inference needs, we recommend you use the Hugging Face `transformers` library instead which supports GPT-NeoX models.**
-
-## GPT-NeoX 2.0
-
-Prior to 3/9/2023, GPT-NeoX relied on [DeeperSpeed](https://github.com/EleutherAI/DeeperSpeed), which was based on an old version of DeepSpeed (0.3.15). In order to migrate to the latest upstream DeepSpeed version while allowing users to access the old versions of GPT-NeoX and DeeperSpeed, we have introduced two versioned releases for both libraries:
-
-- Version 1.0 of [GPT-NeoX](https://github.com/EleutherAI/gpt-neox/releases/tag/v1.0) and [DeeperSpeed](https://github.com/EleutherAI/DeeperSpeed/releases/tag/v1.0) maintain snapshots of the old stable versions that [GPT-NeoX-20B](https://arxiv.org/abs/2204.06745) and the [Pythia Suite](https://github.com/EleutherAI/pythia) were trained on.
-- Version 2.0 of [GPT-NeoX](https://github.com/EleutherAI/gpt-neox/releases/tag/v2.0) and [DeeperSpeed](https://github.com/EleutherAI/DeeperSpeed/releases/tag/v2.0) are the latest versions built on the latest DeepSpeed, and will be maintained going forward.
+## GPT-Vérité
 
 # Contents
 
@@ -153,18 +137,13 @@ The tokenized data will be saved out to two files: `[data-dir]/[dataset-name]/[d
 
 To prepare your own dataset for training with custom data, format it as one large [jsonl](https://jsonlines.org/)-formatted file with each item in the list of dictionaries being a separate document. The document text should be grouped under one JSON key, i.e `"text"`. Any auxiliary data stored in other fields will not be used.
 
-Next make sure to download the GPT2 tokenizer vocab, and merge files from the following links:
+Use the GPT-Vérité tokenizer (for which only a single Vocab file is needed):
 
-- Vocab: https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-vocab.json
-- Merge: https://s3.amazonaws.com/models.huggingface.co/bert/gpt2-merges.txt
-
-Or use the 20B tokenizer (for which only a single Vocab file is needed):
-
-- Vocab: https://the-eye.eu/public/AI/models/GPT-NeoX-20B/slim_weights/20B_tokenizer.json
+- Vocab: [https://the-eye.eu/public/AI/models/GPT-NeoX-20B/slim_weights/20B_tokenizer.json](https://huggingface.co/davidvblumenthal/GPT-Verite_1.4B/blob/main/tokenizer.json)
 
 (alternatively, you can provide any tokenizer file that can be loaded by Hugging Face's tokenizers library with the `Tokenizer.from_pretrained()` command)
 
-You can now pretokenize your data using `tools/preprocess_data.py`, the arguments for which are detailed below:
+You can now pretokenize your data using `tools/preprocess_data_loss_mask.py`, the arguments for which are detailed below:
 
 ```
 usage: preprocess_data.py [-h] --input INPUT [--jsonl-keys JSONL_KEYS [JSONL_KEYS ...]] [--num-docs NUM_DOCS] --tokenizer-type {HFGPT2Tokenizer,HFTokenizer,GPT2BPETokenizer,CharLevelTokenizer} [--vocab-file VOCAB_FILE] [--merge-file MERGE_FILE] [--append-eod] [--ftfy] --output-prefix OUTPUT_PREFIX
@@ -205,13 +184,15 @@ runtime:
 For example:
 
 ```bash
-python tools/preprocess_data.py \
-            --input ./data/mydataset.jsonl.zst \
-            --output-prefix ./data/mydataset \
-            --vocab ./data/gpt2-vocab.json \
-            --merge-file gpt2-merges.txt \
+python preprocess_data_loss_mask.py \
+            --input /home/kit/stud/ukmwn/master_thesis/data/Wikipedia/Wikipedia_sample_en.jsonl \
+            --output-prefix ../../data/padding/verzweifelt \
+            --vocab ../../data/les_faits/tokenizer/gpt-ver-tokenizer.json \
             --dataset-impl mmap \
-            --tokenizer-type GPT2BPETokenizer \
+            --tokenizer-type HFGPTVerTokenizer \
+            --loss-mask-multiple 2 \
+            --loss-mask \
+            --pad-to-max-length \
             --append-eod
 ```
 
