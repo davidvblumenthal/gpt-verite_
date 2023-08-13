@@ -270,9 +270,9 @@ def convert(input_checkpoint_path, loaded_config, output_checkpoint_path):
 
 """
 python convert_sequential_to_hf.py \
-    --input_dir /p/project/hai_verite/training_repository/artefacts/checkpoints/160M_pad_sc_4/global_step49126 \
-    --config_file /p/project/hai_verite/training_repository/artefacts/checkpoints/160M_pad_sc_4/global_step49126/configs/160M_paddding_v1_sc_4.yml \
-    --output_dir /p/project/hai_verite/training_repository/artefacts/huggingface_models/padding_sc4 \
+    --input_dir /home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B/global_step25046 \
+    --config_file /home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B/global_step25046/configs/1-4B.yml \
+    --output_dir /home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/huggingface_models/GPT-Verite_1-4B \
     --upload
 """
 

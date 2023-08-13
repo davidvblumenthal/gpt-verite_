@@ -1,9 +1,9 @@
 {
 
-   "data_path": "/home/hk-project-test-lmcdm/ew9122/scratch_training/data/les_faits_padding_sc2/merged/les_faits",
+   "data_path": "/home/hk-project-test-lmcdm/ew9122/scratch_training/data/les_faits_no_sc/merged/les_faits",
 
-   "save": "/home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B",
-   "load": "/home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B",
+   "save": "/home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B_no_sc",
+   "load": "/home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/checkpoints/gpt-verite_1-4B_no_sc",
    
    "vocab-file": "/home/hk-project-test-lmcdm/ew9122/scratch_training/artefacts/tokenizer/gpt-verite_tokenizer.json",
    "tokenizer_type": "HFTokenizer",
@@ -12,10 +12,11 @@
    "model-parallel-size": 1,
 
 
-   "train_micro_batch_size_per_gpu": 28,
+   "train_micro_batch_size_per_gpu": 30,
    "gradient_accumulation_steps": 1,
    "data-impl": "mmap",
-   "split": "999,1,0",
+   "num_workers": 1,
+   "split": "1000,0,0",
 
 
    "num-layers": 38,
@@ -72,26 +73,27 @@
    "precision": "bfloat16",
    "fp32_allreduce": true,
 
-   "train-iters": 25046, 
-   "lr-decay-iters": 25046,
+   "train-iters": 26170, 
+   "lr-decay-iters": 26170,
 
    "distributed-backend": "nccl",
    "lr-decay-style": "cosine",
    "warmup": 0.01,
    "checkpoint-factor": 1500,
+   "extra_save_iters": [100, 500, 1000],
    "eval-interval": 1000,
    "eval-iters": 10,
    "log-interval": 10,
-   "steps_per_print": 1,
+   "steps_per_print": 10,
 
    "use_wandb": true,
    "wandb_project": "GPT-Verite",
-   "wandb_group": "1.4B_GPT-Verite",
+   "wandb_group": "1.4B_GPT-Verite_no_sc",
 
    "keep-last-n-checkpoints": 4,
    "wall_clock_breakdown": true,
 
-   "exit_interval": 2820,
+   "exit_interval": 2095,
 
    "launcher": "slurm",
    "deepspeed_slurm": true,

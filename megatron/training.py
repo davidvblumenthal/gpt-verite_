@@ -58,7 +58,7 @@ from megatron.utils import (
 from megatron.model.gpt2_model import cross_entropy
 from eval_tasks import run_eval_harness
 
-START_TIME = int(time())
+_TRAIN_START_TIME = time() #int(time())
 
 
 def mup_weights_reinit(neox_args, model):
@@ -189,6 +189,17 @@ def pretrain(neox_args):
 
     # Initialize and get arguments, timers, and Tensorboard writer.
     initialize_megatron(neox_args=neox_args)
+
+    # Exiting duration stuff
+    global _TRAIN_START_TIME
+    start_time_tensor = torch.cuda.FloatTensor([_TRAIN_START_TIME])
+
+    torch.distributed.all_reduce(
+                             start_time_tensor,
+                             op=torch.distributed.ReduceOp.MIN
+                            )
+
+    _TRAIN_START_TIME = start_time_tensor.item()
 
     # Model, optimizer, and learning rate.
     timers("model and optimizer").start()
@@ -843,17 +854,28 @@ def train(
             )
 
 
-        if (int(time()) - START_TIME) / 60 >= neox_args.exit_interval:
-            print_rank_0("Exiting and saving checkpoint due to exit_duration")
+        if neox_args.exit_interval:    #(int(time()) - START_TIME) / 60 >= neox_args.exit_interval:
             
-            save_checkpoint(
-                neox_args=neox_args,
-                iteration=iteration,
-                model=model,
-                optimizer=optimizer,
-                lr_scheduler=lr_scheduler,
-            )
-            sys.exit()
+            train_time = (time() - _TRAIN_START_TIME) / 60.0
+            done_cuda = torch.cuda.IntTensor(
+                [train_time > neox_args.exit_interval]
+                )
+            torch.distributed.all_reduce(
+                done_cuda, op=torch.distributed.ReduceOp.MAX)
+            
+            done = done_cuda.item()
+
+            if done:
+                print_rank_0("Exiting and saving checkpoint due to exit_duration")          
+            
+                save_checkpoint(
+                    neox_args=neox_args,
+                    iteration=iteration,
+                    model=model,
+                    optimizer=optimizer,
+                    lr_scheduler=lr_scheduler,
+                )
+                sys.exit()
 
 
         # Evaluation
